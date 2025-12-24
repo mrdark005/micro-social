@@ -1,0 +1,454 @@
+<% 
+    const { arkadaslar, gelenIstekler } = locals;
+    
+    let body = `
+        <style>
+            .friends-container {
+                background: #f8f9fa;
+                min-height: 100vh;
+                padding: 40px 0;
+            }
+            
+            .friends-header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 25px;
+                padding: 40px;
+                margin-bottom: 30px;
+                box-shadow: 0 15px 50px rgba(102, 126, 234, 0.25);
+                color: white;
+                text-align: center;
+            }
+            
+            .friends-title {
+                font-size: 2.5rem;
+                font-weight: 800;
+                margin-bottom: 10px;
+            }
+            
+            .add-friend-box {
+                background: white;
+                border-radius: 20px;
+                padding: 30px;
+                margin-bottom: 30px;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+                border: 1px solid #e9ecef;
+            }
+            
+            .add-friend-title {
+                color: #667eea;
+                font-weight: 700;
+                font-size: 1.3rem;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .search-friend-input {
+                border: 2px solid #e0e0e0;
+                border-radius: 50px;
+                padding: 15px 25px;
+                font-size: 15px;
+                transition: all 0.3s;
+                width: 100%;
+            }
+            
+            .search-friend-input:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                outline: none;
+            }
+            
+            .btn-add-friend {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                border: none;
+                color: white;
+                border-radius: 50px;
+                padding: 15px 35px;
+                font-weight: 600;
+                transition: all 0.3s;
+                white-space: nowrap;
+            }
+            
+            .btn-add-friend:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+                color: white;
+            }
+            
+            .section-card {
+                background: white;
+                border-radius: 20px;
+                overflow: hidden;
+                margin-bottom: 30px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+                border: 1px solid #f0f0f0;
+            }
+            
+            .section-header {
+                padding: 25px 30px;
+                font-weight: 700;
+                font-size: 1.3rem;
+                border-bottom: 2px solid #f0f0f0;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .section-header.requests {
+                background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+                color: #2d3436;
+            }
+            
+            .section-header.friends {
+                background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+                color: white;
+            }
+            
+            .friend-item {
+                padding: 20px 30px;
+                border-bottom: 1px solid #f5f5f5;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: all 0.2s;
+            }
+            
+            .friend-item:hover {
+                background: #f8f9fa;
+            }
+            
+            .friend-item:last-child {
+                border-bottom: none;
+            }
+            
+            .friend-info {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .friend-avatar {
+                width: 55px;
+                height: 55px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #667eea;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            }
+            
+            .friend-name {
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: #2d3436;
+                text-decoration: none;
+                transition: all 0.2s;
+            }
+            
+            .friend-name:hover {
+                color: #667eea;
+            }
+            
+            .friend-actions {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            
+            .btn-accept {
+                background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
+                border: none;
+                color: white;
+                border-radius: 50px;
+                padding: 10px 25px;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            
+            .btn-accept:hover {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+                color: white;
+            }
+            
+            .btn-reject {
+                background: white;
+                border: 2px solid #ff7675;
+                color: #ff7675;
+                border-radius: 50px;
+                padding: 10px 25px;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            
+            .btn-reject:hover {
+                background: #ff7675;
+                color: white;
+                transform: scale(1.05);
+            }
+            
+            .btn-chat {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                color: white;
+                border-radius: 50px;
+                padding: 10px 25px;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            
+            .btn-chat:hover {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+                color: white;
+            }
+            
+            .btn-remove {
+                background: white;
+                border: 2px solid #d63031;
+                color: #d63031;
+                border-radius: 50px;
+                padding: 10px 25px;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            
+            .btn-remove:hover {
+                background: #d63031;
+                color: white;
+                transform: scale(1.05);
+            }
+            
+            .empty-state {
+                padding: 60px 30px;
+                text-align: center;
+                color: #999;
+            }
+            
+            .empty-state-icon {
+                font-size: 60px;
+                margin-bottom: 15px;
+                opacity: 0.5;
+            }
+            
+            .badge-count {
+                background: #ff7675;
+                color: white;
+                border-radius: 50%;
+                padding: 5px 12px;
+                font-size: 0.9rem;
+                font-weight: 700;
+            }
+            
+            .suggestion-list {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                border: 2px solid #667eea;
+                border-top: none;
+                border-radius: 0 0 20px 20px;
+                max-height: 200px;
+                overflow-y: auto;
+                z-index: 1000;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                display: none;
+            }
+            
+            .suggestion-item {
+                padding: 12px 20px;
+                cursor: pointer;
+                transition: all 0.2s;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .suggestion-item:hover {
+                background: #f8f9fa;
+                color: #667eea;
+            }
+            
+            .suggestion-item:last-child {
+                border-bottom: none;
+            }
+        </style>
+        
+        <div class="friends-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        
+                         <div class="friends-header">
+                            <h1 class="friends-title">👥 Arkadaş Yönetimi</h1>
+                            <p style="opacity: 0.9; font-size: 1.1rem; margin: 0;">Arkadaşlarınızla bağlantıda kalın</p>
+                        </div>
+                        
+                         <div class="add-friend-box">
+                            <div class="add-friend-title">
+                                ➕ Yeni Arkadaş Ekle
+                            </div>
+                            <form action="/arkadas_ekle/" method="GET" id="addFriendForm">
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <div style="position: relative;">
+                                            <input 
+                                                type="text" 
+                                                id="friendSearchInput" 
+                                                name="kullanici"
+                                                class="search-friend-input" 
+                                                placeholder="🔍 Kullanıcı adı yazın..." 
+                                                autocomplete="off"
+                                                required
+                                            >
+                                            <div id="suggestionList" class="suggestion-list"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-add-friend w-100">
+                                            Arkadaş Ekle
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                         <div class="section-card">
+                            <div class="section-header requests">
+                                🔔 Gelen Arkadaşlık İstekleri
+                                ${gelenIstekler.length > 0 ? '<span class="badge-count">' + gelenIstekler.length + '</span>' : ''}
+                            </div>
+    `;
+    
+    if (gelenIstekler.length === 0) {
+        body += `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <p>Henüz yeni bir arkadaşlık isteği yok.</p>
+            </div>
+        `;
+    } else {
+        gelenIstekler.forEach(istek => {
+            const profilFoto = istek.profilFotografi || 'https://i.ibb.co/L9L1s1K/default-profile.png';
+            body += `
+                <div class="friend-item">
+                    <div class="friend-info">
+                        <img src="${profilFoto}" class="friend-avatar" alt="${istek.kullaniciAdi}">
+                        <div>
+                            <a href="/profil/${istek.kullaniciAdi}" class="friend-name">@${istek.kullaniciAdi}</a>
+                            <div style="font-size: 0.9rem; color: #666;">Size arkadaşlık isteği gönderdi</div>
+                        </div>
+                    </div>
+                    <div class="friend-actions">
+                        <a href="/istek_yonet/kabul/${istek.kullaniciAdi}" class="btn btn-accept">✓ Kabul Et</a>
+                        <a href="/istek_yonet/reddet/${istek.kullaniciAdi}" class="btn btn-reject">✕ Reddet</a>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    body += `
+                        </div>
+                        
+                         <div class="section-card">
+                            <div class="section-header friends">
+                                ✅ Arkadaşlarım
+                                ${arkadaslar.length > 0 ? '<span class="badge-count" style="background: white; color: #0984e3;">' + arkadaslar.length + '</span>' : ''}
+                            </div>
+    `;
+    
+    if (arkadaslar.length === 0) {
+        body += `
+            <div class="empty-state">
+                <div class="empty-state-icon">👋</div>
+                <p>Henüz arkadaşınız yok. Üstteki arama kutusundan kullanıcı arayabilirsiniz!</p>
+            </div>
+        `;
+    } else {
+        arkadaslar.forEach(arkadas => {
+            const profilFoto = arkadas.profilFotografi || 'https://i.ibb.co/L9L1s1K/default-profile.png';
+            body += `
+                <div class="friend-item">
+                    <div class="friend-info">
+                        <img src="${profilFoto}" class="friend-avatar" alt="${arkadas.kullaniciAdi}">
+                        <a href="/profil/${arkadas.kullaniciAdi}" class="friend-name">@${arkadas.kullaniciAdi}</a>
+                    </div>
+                    <div class="friend-actions">
+                        <a href="/sohbet/${arkadas.kullaniciAdi}" class="btn btn-chat">💬 Sohbet</a>
+                        <a href="/arkadas_cikar/${arkadas.kullaniciAdi}" class="btn btn-remove" onclick="return confirm('Bu arkadaşı çıkarmak istediğinizden emin misiniz?')">Çıkar</a>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    body += `
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io();
+            const friendSearchInput = document.getElementById('friendSearchInput');
+            const suggestionList = document.getElementById('suggestionList');
+            const addFriendForm = document.getElementById('addFriendForm');
+            let searchTimeout;
+            
+             friendSearchInput.addEventListener('input', function(e) {
+                const query = e.target.value.trim();
+                
+                clearTimeout(searchTimeout);
+                
+                if (query.length >= 2) {
+                    searchTimeout = setTimeout(() => {
+                        socket.emit('kullanici_ara', query);
+                    }, 300);
+                } else {
+                    suggestionList.style.display = 'none';
+                }
+            });
+            
+             socket.on('arama_sonuclari', (sonuclar) => {
+                if (sonuclar.length === 0) {
+                    suggestionList.style.display = 'none';
+                    return;
+                }
+                
+                suggestionList.innerHTML = '';
+                
+                sonuclar.forEach(kullanici => {
+                    const item = document.createElement('div');
+                    item.className = 'suggestion-item';
+                    item.textContent = '@' + kullanici;
+                    item.onclick = () => {
+                        friendSearchInput.value = kullanici;
+                        suggestionList.style.display = 'none';
+                    };
+                    suggestionList.appendChild(item);
+                });
+                
+                suggestionList.style.display = 'block';
+            });
+            
+             addFriendForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = friendSearchInput.value.trim();
+                if (username) {
+                    window.location.href = '/arkadas_ekle/' + username;
+                }
+            });
+            
+             document.addEventListener('click', function(e) {
+                if (!friendSearchInput.contains(e.target) && !suggestionList.contains(e.target)) {
+                    suggestionList.style.display = 'none';
+                }
+            });
+        </script>
+    `; 
+%>
+
+<%- include('layout', { title: 'Arkadaş Listesi', body: body }) %>

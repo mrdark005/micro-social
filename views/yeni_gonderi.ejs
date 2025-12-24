@@ -1,0 +1,296 @@
+<% var title='Yeni Gönderi Oluştur' ; var body=` <style>
+    .create-post-container {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 40px 0;
+    }
+
+    .create-post-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 25px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.25);
+    color: white;
+    text-align: center;
+    }
+
+    .create-post-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    }
+
+    .post-form-card {
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border: 1px solid #f0f0f0;
+    }
+
+    .post-form-body {
+    padding: 40px;
+    }
+
+    .form-label {
+    font-weight: 700;
+    color: #2d3436;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    }
+
+    .form-control, .form-textarea {
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 15px 20px;
+    font-size: 15px;
+    transition: all 0.3s;
+    width: 100%;
+    }
+
+    .form-textarea {
+    resize: vertical;
+    min-height: 150px;
+    font-family: inherit;
+    }
+
+    .form-control:focus, .form-textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    outline: none;
+    }
+
+    .image-preview-container {
+    margin-top: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    display: none;
+    position: relative;
+    background: #f8f9fa;
+    border: 2px dashed #e0e0e0;
+    }
+
+    .image-preview-container.active {
+    display: block;
+    border-style: solid;
+    border-color: #667eea;
+    }
+
+    .image-preview {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    display: block;
+    }
+
+    .image-preview-placeholder {
+    padding: 60px;
+    text-align: center;
+    color: #999;
+    }
+
+    .remove-image-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 107, 107, 0.95);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .remove-image-btn:hover {
+    background: #ff6b6b;
+    transform: scale(1.1);
+    }
+
+    .btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    border-radius: 15px;
+    padding: 18px 50px;
+    font-weight: 700;
+    font-size: 17px;
+    transition: all 0.3s;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    color: white;
+    }
+
+    .btn-back {
+    background: white;
+    border: 2px solid #e0e0e0;
+    color: #666;
+    border-radius: 15px;
+    padding: 18px 50px;
+    font-weight: 600;
+    font-size: 17px;
+    transition: all 0.3s;
+    width: 100%;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    }
+
+    .btn-back:hover {
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateY(-2px);
+    }
+
+    .info-text {
+    color: #999;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    font-style: italic;
+    }
+
+    .char-counter {
+    text-align: right;
+    color: #999;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    }
+
+    .char-counter.warning {
+    color: #ff9800;
+    }
+
+    .char-counter.danger {
+    color: #ff6b6b;
+    }
+    </style>
+
+    <div class="create-post-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+
+                    <div class="create-post-header">
+                        <h1 class="create-post-title">✨ Yeni Gönderi Oluştur</h1>
+                        <p style="opacity: 0.9; font-size: 1.1rem; margin: 0;">Düşüncelerini paylaş, resim ekle!</p>
+                    </div>
+
+                    <div class="post-form-card">
+                        <div class="post-form-body">
+                            <form action="/gonderi/yeni" method="POST" id="postForm">
+
+                                <div class="mb-4">
+                                    <label for="icerik" class="form-label">
+                                        📝 Gönderi İçeriği
+                                    </label>
+                                    <textarea id="icerik" name="icerik" class="form-textarea"
+                                        placeholder="Ne düşünüyorsunuz? Etiket eklemek için # kullanın..."
+                                        maxlength="1000" required></textarea>
+                                    <div class="char-counter" id="charCounter">0 / 1000 karakter</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="resimUrl" class="form-label">
+                                        🖼️ Resim URL (Opsiyonel)
+                                    </label>
+                                    <input type="url" id="resimUrl" name="resimUrl" class="form-control"
+                                        placeholder="https://ornek.com/resim.jpg">
+                                    <div class="info-text">Gönderiyle birlikte paylaşmak istediğiniz resmin URL adresini
+                                        girin</div>
+                                </div>
+
+                                <div class="image-preview-container" id="imagePreviewContainer">
+                                    <button type="button" class="remove-image-btn" id="removeImageBtn"
+                                        title="Resmi Kaldır">×</button>
+                                    <img src="" alt="Resim Önizleme" class="image-preview" id="imagePreview">
+                                </div>
+
+                                <div class="row g-3 mt-4">
+                                    <div class="col-md-6">
+                                        <a href="/panel" class="btn-back">← Geri Dön</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn-submit">
+                                            🚀 Gönderiyi Paylaş
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const icerikTextarea = document.getElementById('icerik');
+        const charCounter = document.getElementById('charCounter');
+
+        icerikTextarea.addEventListener('input', function () {
+            const length = this.value.length;
+            const maxLength = 1000;
+            charCounter.textContent = length + ' / ' + maxLength + ' karakter';
+
+            if (length > maxLength * 0.9) {
+                charCounter.classList.add('danger');
+                charCounter.classList.remove('warning');
+            } else if (length > maxLength * 0.7) {
+                charCounter.classList.add('warning');
+                charCounter.classList.remove('danger');
+            } else {
+                charCounter.classList.remove('warning', 'danger');
+            }
+        });
+
+        const resimUrlInput = document.getElementById('resimUrl');
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const removeImageBtn = document.getElementById('removeImageBtn');
+
+        resimUrlInput.addEventListener('input', function () {
+            const url = this.value.trim();
+            if (url) {
+                imagePreview.src = url;
+                imagePreviewContainer.classList.add('active');
+
+                imagePreview.onerror = function () {
+                    imagePreviewContainer.classList.remove('active');
+                };
+            } else {
+                imagePreviewContainer.classList.remove('active');
+            }
+        });
+
+        removeImageBtn.addEventListener('click', function () {
+            resimUrlInput.value = '';
+            imagePreviewContainer.classList.remove('active');
+        });
+
+        const postForm = document.getElementById('postForm');
+        postForm.addEventListener('submit', function (e) {
+            const icerik = icerikTextarea.value.trim();
+            if (icerik === '') {
+                e.preventDefault();
+                alert('Lütfen gönderi içeriği girin!');
+                icerikTextarea.focus();
+            }
+        });
+    </script>
+    `;
+    %>
+    <%- include('layout', { title: title, body: body }) %>

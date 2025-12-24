@@ -1,0 +1,66 @@
+<% const { mesaj }=locals; let body=` <style>
+    .error-container {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .error-card {
+    max-width: 600px;
+    width: 100%;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    }
+
+    .error-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    }
+
+    .error-title {
+    color: #dc3545;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    }
+
+    .error-message {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    }
+
+    .error-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    }
+    </style>
+
+    <div class="container">
+        <div class="error-container">
+            <div class="error-card">
+                <div class="error-icon">⚠️</div>
+                <h1 class="error-title">Bir Hata Oluştu!</h1>
+                <p class="error-message">${mesaj || 'Bilinmeyen bir hata oluştu.'}</p>
+                <div class="error-actions">
+                    <a href="/panel" class="btn btn-primary">
+                        🏠 Ana Sayfaya Dön
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        ← Geri Git
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    %>
+
+    <%- include('layout', { title: 'Hata' , body: body }) %>

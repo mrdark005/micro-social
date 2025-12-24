@@ -1,0 +1,242 @@
+<% var title='Profili Düzenle' ; %>
+    <% var body=` <style>
+        .edit-container {
+        background: #f8f9fa;
+        min-height: 100vh;
+        padding: 40px 0;
+        }
+
+        .edit-card {
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border: 1px solid #f0f0f0;
+        max-width: 700px;
+        margin: 0 auto;
+        }
+
+        .edit-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        }
+
+        .edit-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 800;
+        }
+
+        .edit-header p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+        font-size: 0.95rem;
+        }
+
+        .edit-body {
+        padding: 40px;
+        }
+
+        .form-group {
+        margin-bottom: 30px;
+        }
+
+        .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 12px;
+        display: block;
+        font-size: 1rem;
+        }
+
+        .form-label .icon {
+        margin-right: 8px;
+        }
+
+        .form-control-modern {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: #f8f9fa;
+        }
+
+        .form-control-modern:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .preview-section {
+        margin-top: 15px;
+        padding: 15px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        }
+
+        .preview-label {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 600;
+        }
+
+        .preview-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .preview-cover {
+        width: 120px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-save {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        margin-top: 10px;
+        }
+
+        .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-save:active {
+        transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+        width: 100%;
+        padding: 16px;
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 15px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        }
+
+        .btn-cancel:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+        margin: 30px 0;
+        }
+
+        .info-box {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        padding: 15px 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        }
+
+        .info-box .icon {
+        font-size: 1.5rem;
+        }
+
+        .info-box p {
+        margin: 0;
+        color: #333;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        }
+        </style>
+
+        <div class="edit-container">
+            <div class="container">
+                <div class="edit-card">
+                    <div class="edit-header">
+                        <h2>⚙️ Profili Düzenle</h2>
+                        <p>Profil fotoğrafını ve kapak fotoğrafını güncelleyin</p>
+                    </div>
+
+                    <div class="edit-body">
+                        <div class="info-box">
+                            <span class="icon">💡</span>
+                            <p>İpucu: Fotoğraflarınızın URL'lerini girin. En iyi sonuç için yüksek kaliteli görseller
+                                kullanın.</p>
+                        </div>
+
+                        <form action="/profil_duzenle" method="POST">
+                            <div class="form-group">
+                                <label for="profilFotografi" class="form-label">
+                                    <span class="icon">👤</span> Profil Fotoğrafı URL'si
+                                </label>
+                                <input type="url" id="profilFotografi" name="profilFotografi"
+                                    class="form-control-modern" value="${kullanici.profilFotografi || ''}"
+                                    placeholder="cdn/defultUserProfil.png">
+                                <div class="preview-section">
+                                    <span class="preview-label">Mevcut:</span>
+                                    <img src="${kullanici.profilFotografi}" class="preview-avatar" alt="Profil">
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="form-group">
+                                <label for="arkaPlanFotografi" class="form-label">
+                                    <span class="icon">🖼️</span> Kapak Fotoğrafı URL'si
+                                </label>
+                                <input type="url" id="arkaPlanFotografi" name="arkaPlanFotografi"
+                                    class="form-control-modern" value="${kullanici.arkaPlanFotografi || ''}"
+                                    placeholder="cdn/defultUserProfil.png">
+                                <div class="preview-section">
+                                    <span class="preview-label">Mevcut:</span>
+                                    <img src="${kullanici.arkaPlanFotografi}" class="preview-cover" alt="Kapak">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-save">
+                                💾 Değişiklikleri Kaydet
+                            </button>
+                        </form>
+
+                        <a href="/profil" class="btn-cancel">
+                            ← Profili Görüntüle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `; %>
+        <%- include('layout', { title: title, body: body }) -%>
