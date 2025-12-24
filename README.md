@@ -46,10 +46,6 @@ Uygulama `http://localhost:3000` adresinde çalışacaktır.
 }
 ```
 
-## 🌐 Demo
-
-Canlı demo için: [microsocial.vercel.app](https://microsocial.vercel.app)
-
 ## � Lisans
 
 MIT License
