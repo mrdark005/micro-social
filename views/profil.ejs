@@ -1,334 +1,331 @@
-<% const { hedefKullanici, kullaniciGonderileri, arkadasMi, istekGonderilmisMi, kendiProfilimi }=locals; let body=`
-    <style>
-    .profile-container {
-    background: #f8f9fa;
-    min-height: 100vh;
-    padding: 40px 0;
-    }
+<% const { hedefKullanici, kullaniciGonderileri, arkadasMi, istekGonderilmisMi, kendiProfilimi }=locals; %>
 
-    .profile-card {
-    background: white;
-    border-radius: 25px;
-    overflow: visible;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    border: 1px solid #f0f0f0;
-    position: relative;
-    }
+    <%- include('header', Object.assign({}, locals, { title: targetTitle=hedefKullanici.kullaniciAdi + ' Profili' })) %>
 
-    .cover-photo {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    position: relative;
-    border-radius: 25px 25px 0 0;
-    }
+        <style>
+            .profile-container {
+                background: #f8f9fa;
+                min-height: 100vh;
+                padding: 40px 0;
+            }
 
-    .profile-header {
-    padding: 40px;
-    display: flex;
-    align-items: flex-start;
-    gap: 30px;
-    position: relative;
-    margin-top: -80px;
-    }
+            .profile-card {
+                background: white;
+                border-radius: 25px;
+                overflow: visible;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                margin-bottom: 30px;
+                border: 1px solid #f0f0f0;
+                position: relative;
+            }
 
-    .profile-avatar {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 6px solid white;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    flex-shrink: 0;
-    z-index: 2;
-    }
+            .cover-photo {
+                width: 100%;
+                height: 280px;
+                object-fit: cover;
+                position: relative;
+                border-radius: 25px 25px 0 0;
+            }
 
-    .profile-info {
-    flex: 1;
-    padding-top: 100px;
-    }
+            .profile-header {
+                padding: 40px;
+                display: flex;
+                align-items: flex-start;
+                gap: 30px;
+                position: relative;
+                margin-top: -80px;
+            }
 
-    .profile-username {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-top: 0;
-    margin-bottom: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    }
+            .profile-avatar {
+                width: 160px;
+                height: 160px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 6px solid white;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                flex-shrink: 0;
+                z-index: 2;
+            }
 
-    .profile-join-date {
-    color: #999;
-    font-size: 0.95rem;
-    margin-bottom: 25px;
-    }
+            .profile-info {
+                flex: 1;
+                padding-top: 100px;
+            }
 
-    .profile-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-    }
+            .profile-username {
+                font-size: 2.2rem;
+                font-weight: 800;
+                margin-top: 0;
+                margin-bottom: 10px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
 
-    .btn-profile {
-    border-radius: 50px;
-    padding: 12px 30px;
-    font-weight: 600;
-    transition: all 0.3s;
-    border: none;
-    text-decoration: none;
-    display: inline-block;
-    }
+            .profile-join-date {
+                color: #999;
+                font-size: 0.95rem;
+                margin-bottom: 25px;
+            }
 
-    .btn-edit {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-    }
+            .profile-actions {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-top: 20px;
+            }
 
-    .btn-edit:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-    color: white;
-    }
+            .btn-profile {
+                border-radius: 50px;
+                padding: 12px 30px;
+                font-weight: 600;
+                transition: all 0.3s;
+                border: none;
+                text-decoration: none;
+                display: inline-block;
+            }
 
-    .btn-unfriend {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-    color: white;
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
-    }
+            .btn-edit {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            }
 
-    .btn-unfriend:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
-    color: white;
-    }
+            .btn-edit:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+                color: white;
+            }
 
-    .btn-chat {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: white;
-    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.3);
-    }
+            .btn-unfriend {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+                color: white;
+                box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+            }
 
-    .btn-chat:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
-    color: white;
-    }
+            .btn-unfriend:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+                color: white;
+            }
 
-    .btn-add-friend {
-    background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
-    color: white;
-    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.3);
-    }
+            .btn-chat {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                color: white;
+                box-shadow: 0 6px 20px rgba(79, 172, 254, 0.3);
+            }
 
-    .btn-add-friend:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 184, 148, 0.4);
-    color: white;
-    }
+            .btn-chat:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+                color: white;
+            }
 
-    .btn-pending {
-    background: #f0f0f0;
-    color: #999;
-    cursor: not-allowed;
-    }
+            .btn-add-friend {
+                background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
+                color: white;
+                box-shadow: 0 6px 20px rgba(0, 184, 148, 0.3);
+            }
 
-    .btn-friends-count {
-    background: white;
-    border: 2px solid #667eea;
-    color: #667eea;
-    font-weight: 700;
-    }
+            .btn-add-friend:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(0, 184, 148, 0.4);
+                color: white;
+            }
 
-    .btn-friends-count:hover {
-    background: #667eea;
-    color: white;
-    transform: translateY(-3px);
-    }
+            .btn-pending {
+                background: #f0f0f0;
+                color: #999;
+                cursor: not-allowed;
+            }
 
-    .posts-section {
-    margin-top: 40px;
-    }
+            .btn-friends-count {
+                background: white;
+                border: 2px solid #667eea;
+                color: #667eea;
+                font-weight: 700;
+            }
 
-    .posts-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px 30px;
-    border-radius: 20px;
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-    }
+            .btn-friends-count:hover {
+                background: #667eea;
+                color: white;
+                transform: translateY(-3px);
+            }
 
-    .posts-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    }
+            .posts-section {
+                margin-top: 40px;
+            }
 
-    .posts-count {
-    background: rgba(255,255,255,0.25);
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-weight: 600;
-    }
+            .posts-header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 20px;
+                margin-bottom: 25px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            }
 
-    .post-item {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    border: 1px solid #f0f0f0;
-    transition: all 0.3s;
-    }
+            .posts-title {
+                font-size: 1.5rem;
+                font-weight: 700;
+                margin: 0;
+            }
 
-    .post-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
-    border-color: #667eea;
-    }
+            .posts-count {
+                background: rgba(255, 255, 255, 0.25);
+                padding: 8px 20px;
+                border-radius: 50px;
+                font-weight: 600;
+            }
 
-    .post-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #444;
-    margin-bottom: 15px;
-    }
+            .post-item {
+                background: white;
+                border-radius: 20px;
+                padding: 25px;
+                margin-bottom: 20px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+                border: 1px solid #f0f0f0;
+                transition: all 0.3s;
+            }
 
-    .post-meta {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    }
+            .post-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
+                border-color: #667eea;
+            }
 
-    .post-date {
-    color: #999;
-    font-size: 0.9rem;
-    }
+            .post-content {
+                font-size: 1rem;
+                line-height: 1.6;
+                color: #444;
+                margin-bottom: 15px;
+            }
 
-    .post-stats {
-    display: flex;
-    gap: 15px;
-    }
+            .post-meta {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
 
-    .stat-badge {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    padding: 6px 15px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    }
+            .post-date {
+                color: #999;
+                font-size: 0.9rem;
+            }
 
-    .stat-badge.comments {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    }
+            .post-stats {
+                display: flex;
+                gap: 15px;
+            }
 
-    .empty-posts {
-    background: white;
-    border-radius: 20px;
-    padding: 60px 40px;
-    text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    border: 2px dashed #e0e0e0;
-    }
+            .stat-badge {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+                padding: 6px 15px;
+                border-radius: 50px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
 
-    .empty-icon {
-    font-size: 80px;
-    margin-bottom: 20px;
-    opacity: 0.3;
-    }
+            .stat-badge.comments {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            }
 
-    .empty-text {
-    color: #999;
-    font-size: 1.1rem;
-    }
+            .empty-posts {
+                background: white;
+                border-radius: 20px;
+                padding: 60px 40px;
+                text-align: center;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+                border: 2px dashed #e0e0e0;
+            }
 
-    @media (max-width: 768px) {
-    .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    }
+            .empty-icon {
+                font-size: 80px;
+                margin-bottom: 20px;
+                opacity: 0.3;
+            }
 
-    .profile-info {
-    padding-top: 20px;
-    }
-    }
-    </style>
+            .empty-text {
+                color: #999;
+                font-size: 1.1rem;
+            }
 
-    <div class="profile-container">
-        <div class="container">
-            <div>
+            @media (max-width: 768px) {
+                .profile-header {
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                }
+
+                .profile-info {
+                    padding-top: 20px;
+                }
+            }
+
+            .post-image-container {
+                margin: 15px -25px;
+                background: #000;
+                max-height: 400px;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 15px;
+            }
+
+            .post-image {
+                max-width: 100%;
+                max-height: 400px;
+                object-fit: contain;
+            }
+        </style>
+
+        <div class="profile-container">
+            <div class="container">
                 <div class="col-lg-8 mx-auto">
-
                     <div class="profile-card">
-
                         <div class="profile-header">
-                            <img src="${hedefKullanici.profilFotografi}" class="profile-avatar"
-                                alt="${hedefKullanici.kullaniciAdi}">
-
+                            <img src="<%= hedefKullanici.profilFotografi %>" class="profile-avatar"
+                                alt="<%= hedefKullanici.kullaniciAdi %>">
                             <div class="profile-info">
-                                <h1 class="profile-username">@${hedefKullanici.kullaniciAdi}</h1>
-                                <h6 class="profile-join-date">📅 ${new
-                                    Date(hedefKullanici.olusturmaTarihi).toLocaleDateString('tr-TR', { year: 'numeric',
-                                    month: 'long', day: 'numeric' })} tarihinde katıldı</h6>
+                                <h1 class="profile-username">@<%= hedefKullanici.kullaniciAdi %>
+                                </h1>
+                                <h6 class="profile-join-date">📅 <%= new
+                                        Date(hedefKullanici.olusturmaTarihi).toLocaleDateString('tr-TR', {
+                                        year: 'numeric' , month: 'long' , day: 'numeric' }) %> tarihinde katıldı</h6>
 
                                 <div class="profile-actions">
-                                    `;
+                                    <% if (kendiProfilimi) { %>
+                                        <a href="/profil_duzenle" class="btn-profile btn-edit">⚙️ Profili Düzenle</a>
+                                        <% } else { %>
+                                            <% if (arkadasMi) { %>
+                                                <a href="/sohbet/<%= hedefKullanici.kullaniciAdi %>"
+                                                    class="btn-profile btn-chat">💬 Sohbet Başlat</a>
+                                                <a href="/arkadas_cikar/<%= hedefKullanici.kullaniciAdi %>"
+                                                    class="btn-profile btn-unfriend"
+                                                    onclick="return confirm('Bu arkadaşı çıkarmak istediğinizden emin misiniz?')">💔
+                                                    Arkadaşlıktan Çıkar</a>
+                                                <% } else if (istekGonderilmisMi) { %>
+                                                    <button class="btn-profile btn-pending" disabled>⏳ İstek
+                                                        Gönderildi</button>
+                                                    <% } else { %>
+                                                        <a href="/arkadas_ekle/<%= hedefKullanici.kullaniciAdi %>"
+                                                            class="btn-profile btn-add-friend">🤝 Arkadaş Ekle</a>
+                                                        <% } %>
+                                                            <% } %>
 
-                                    // Koşullu Butonlar
-                                    if (kendiProfilimi) {
-                                    body += `
-                                    <a href="/profil_duzenle" class="btn-profile btn-edit">
-                                        ⚙️ Profili Düzenle
-                                    </a>
-                                    `;
-                                    } else {
-                                    if (arkadasMi) {
-                                    body += `
-                                    <a href="/sohbet/${hedefKullanici.kullaniciAdi}" class="btn-profile btn-chat">
-                                        💬 Sohbet Başlat
-                                    </a>
-                                    <a href="/arkadas_cikar/${hedefKullanici.kullaniciAdi}"
-                                        class="btn-profile btn-unfriend"
-                                        onclick="return confirm('Bu arkadaşı çıkarmak istediğinizden emin misiniz?')">
-                                        💔 Arkadaşlıktan Çıkar
-                                    </a>
-                                    `;
-                                    } else if (istekGonderilmisMi) {
-                                    body += `
-                                    <button class="btn-profile btn-pending" disabled>
-                                        ⏳ İstek Gönderildi
-                                    </button>
-                                    `;
-                                    } else {
-                                    body += `
-                                    <a href="/arkadas_ekle/${hedefKullanici.kullaniciAdi}"
-                                        class="btn-profile btn-add-friend">
-                                        🤝 Arkadaş Ekle
-                                    </a>
-                                    `;
-                                    }
-                                    }
-
-                                    // Arkadaş Sayısı
-                                    const arkadasSayisi = (hedefKullanici.arkadaslar &&
-                                    hedefKullanici.arkadaslar.length) || 0;
-                                    body += `
-                                    <a href="/arkadaslarim" class="btn-profile btn-friends-count">
-                                        👥 ${arkadasSayisi} Arkadaş
-                                    </a>
+                                                                <% const arkadasSayisi=(hedefKullanici.arkadaslar &&
+                                                                    hedefKullanici.arkadaslar.length) || 0; %>
+                                                                    <a href="/arkadaslarim"
+                                                                        class="btn-profile btn-friends-count">👥 <%=
+                                                                            arkadasSayisi %> Arkadaş</a>
                                 </div>
                             </div>
                         </div>
@@ -337,48 +334,47 @@
                     <div class="posts-section">
                         <div class="posts-header">
                             <h2 class="posts-title">📝 Gönderiler</h2>
-                            <span class="posts-count">${kullaniciGonderileri.length} Gönderi</span>
+                            <span class="posts-count">
+                                <%= kullaniciGonderileri.length %> Gönderi
+                            </span>
                         </div>
-                        `;
 
-                        if (kullaniciGonderileri.length === 0) {
-                        body += `
-                        <div class="empty-posts">
-                            <div class="empty-icon">📭</div>
-                            <p class="empty-text">Bu kullanıcının henüz gönderisi yok.</p>
-                        </div>
-                        `;
-                        } else {
-                        kullaniciGonderileri.forEach((gonderi, index) => {
-                        const begeniSayisi = gonderi.begeniler ? gonderi.begeniler.length : 0;
-                        const yorumSayisi = gonderi.yorumlar ? gonderi.yorumlar.length : 0;
-
-                        let icerikHTML = gonderi.icerik;
-                        icerikHTML = icerikHTML.replace(/#(\w+)/g, '<a href="/panel?arama=&etiket=%23$1"
-                            style="color: #667eea; font-weight: 600; text-decoration: none;">#$1</a>');
-
-                        body += `
-                        <div class="post-item" style=`animation-delay: ${index * 0.1}s;`>
-                            <p class="post-content">${icerikHTML}</p>
-                            <div class="post-meta">
-                                <span class="post-date">🕐 ${gonderi.zaman}</span>
-                                <div class="post-stats">
-                                    <span class="stat-badge">❤️ ${begeniSayisi}</span>
-                                    <span class="stat-badge comments">💬 ${yorumSayisi}</span>
-                                </div>
+                        <% if (kullaniciGonderileri.length===0) { %>
+                            <div class="empty-posts">
+                                <div class="empty-icon">📭</div>
+                                <p class="empty-text">Bu kullanıcının henüz gönderisi yok.</p>
                             </div>
-                        </div>
-                        `;
-                        });
-                        }
+                            <% } else { %>
+                                <% kullaniciGonderileri.forEach(gonderi=> { %>
+                                    <div class="post-item">
+                                        <p class="post-content">
+                                            <%- gonderi.icerik.replace(/#(\w+)/g, '<a href="/panel?arama=&etiket=%23$1" style="color: #667eea; font-weight: 600; text-decoration: none;">#$1</a>'
+                                                ) %>
+                                        </p>
 
-                        body += `
+                                        <% if (gonderi.resimUrl) { %>
+                                            <div class="post-image-container">
+                                                <img src="<%= gonderi.resimUrl %>" alt="Gönderi Resmi"
+                                                    class="post-image"
+                                                    onerror="this.parentElement.style.display='none'">
+                                            </div>
+                                            <% } %>
+
+                                                <div class="post-meta">
+                                                    <span class="post-date">🕐 <%= gonderi.zaman %></span>
+                                                    <div class="post-stats">
+                                                        <span class="stat-badge">❤️ <%= gonderi.begeniler ?
+                                                                gonderi.begeniler.length : 0 %></span>
+                                                        <span class="stat-badge comments">💬 <%= gonderi.yorumlar ?
+                                                                gonderi.yorumlar.length : 0 %></span>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                    <% }); %>
+                                        <% } %>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    `;
-    %>
 
-    <%- include('layout', { title: hedefKullanici.kullaniciAdi + ' Profili' , body: body }) -%>
+        <%- include('footer') %>

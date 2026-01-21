@@ -10,11 +10,11 @@
   "description": "",
   "dependencies": {
     "body-parser": "^2.2.1",
-    "darkdb": "^3.4.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "http": "^0.0.1-security",
+    "npm.db": "^2.0.7",
     "socket.io": "^4.8.1"
   }
 }

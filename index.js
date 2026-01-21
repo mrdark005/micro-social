@@ -3,16 +3,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const session = require('express-session');
-
-const DarkDB = require("darkdb")
-const db = new DarkDB({
-    name: "darkdb",
-    separator: ".",
-    jsonSpaces: 4,
-    format:"json",
-    autoFile:false
-});
-
+const db = require('./db');
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -40,49 +31,17 @@ io.use(wrap(sessionMiddleware));
 io.use((socket, next) => {
     const session = socket.request.session;
     if (!session) {
-
         return next(new Error('Session not found'));
     }
     next();
 });
 
+const { generatePostId, getChatRoomId, requireLogin, bildirimEkle } = require('./utils/helpers')(io, db);
 
-function getChatRoomId(user1, user2) {
-    const sortedUsers = [user1, user2].sort();
-    return sortedUsers.join('_');
-}
+require('./socket/socketHandler')(io);
 
-async function bildirimEkle(aliciKullaniciAdi, mesaj, link) {
-    const alici = await db.get(aliciKullaniciAdi);
-    if (!alici) return;
-
-    alici.bildirimler = alici.bildirimler || [];
-
-    const yeniBildirim = {
-        mesaj: mesaj,
-        link: link || '/panel',
-        okundu: false,
-        zaman: new Date().toLocaleString('tr-TR')
-    };
-
-    alici.bildirimler.unshift(yeniBildirim);
-    await db.set(aliciKullaniciAdi, alici);
-
-    io.to(aliciKullaniciAdi).emit('yeniBildirim', {
-        mesaj: yeniBildirim.mesaj,
-        okunmamisSayisi: alici.bildirimler.filter(b => !b.okundu).length
-    });
-}
-
-const generatePostId = (index) => `post_${Date.now()}_${index}`;
-
-
-const requireLogin = (req, res, next) => {
-    if (req.session.kullaniciAdi) {
-        return next();
-    }
-    res.redirect('/giris?hata=Giris_yapmaniz_gerekmektedir.');
-};
+const authRoutes = require('./routes/auth');
+app.use('/', authRoutes);
 
 app.use(async (req, res, next) => {
     const kullaniciAdi = req.session.kullaniciAdi;
@@ -95,7 +54,7 @@ app.use(async (req, res, next) => {
         const istekler = (kullanici && kullanici.arkadasIstekleri) || [];
 
         res.locals.okunmamisBildirimSayisi = bildirimler.filter(b => !b.okundu).length;
-        res.locals.sonBildirimler = bildirimler.slice(0, 5);  
+        res.locals.sonBildirimler = bildirimler.slice(0, 5);
         res.locals.toplamBildirimSayisi = bildirimler.length;
 
         res.locals.arkadasIstekleri = istekler;
@@ -111,60 +70,12 @@ app.use(async (req, res, next) => {
 });
 
 
-
-
-app.get('/', (req, res) => { res.redirect('/giris'); });
-
-app.get('/kayit', (req, res) => { res.render('kayit', { hata: null }); });
-
-app.post('/kayit', async (req, res) => {
-    const { kullaniciAdi, sifre } = req.body;
-    if (await db.get(kullaniciAdi)) {
-        return res.render('kayit', { hata: 'Bu kullanici adi zaten alinmis.' });
-    }
-
-    await db.set(kullaniciAdi, {
-        kullaniciAdi: kullaniciAdi,
-        sifre: sifre,
-        olusturmaTarihi: new Date(),
-        bildirimler: [],
-        arkadaslar: [],
-        arkadasIstekleri: [],
-        profilFotografi: "cdn/defultUserProfil.png",
-        arkaPlanFotografi: ' '
-    });
-    res.redirect('/giris');
-});
-
-app.get('/giris', (req, res) => {
-    const urlHata = req.query.hata ? decodeURIComponent(req.query.hata) : null;
-    res.render('giris', { hata: urlHata, basari: null });
-});
-
-app.post('/giris', async (req, res) => {
-    const { kullaniciAdi, sifre } = req.body;
-    const kullanici = await db.get(kullaniciAdi);
-
-    if (!kullanici || kullanici.sifre !== sifre) {
-        return res.render('giris', { hata: 'Kullanici adi veya sifre yanlis.', basari: null });
-    }
-
-    req.session.kullaniciAdi = kullaniciAdi;
-    req.session.girisZamani = new Date().toLocaleString();
-    res.redirect('/panel');
-});
-
-app.get('/cikis', (req, res) => {
-    req.session.destroy(err => {
-        if (err) return res.status(500).send('Oturum sonlandirilamadi.');
-        res.redirect('/giris');
-    });
-});
-
 app.get("/bildirim/oku", requireLogin, async (req, res) => {
     const kullanici = await db.get(req.session.kullaniciAdi);
-    kullanici.bildirimler = kullanici.bildirimler.map(b => ({ ...b, okundu: true }));
-    await db.set(req.session.kullaniciAdi, kullanici)
+    if (kullanici && kullanici.bildirimler) {
+        kullanici.bildirimler = kullanici.bildirimler.map(b => ({ ...b, okundu: true }));
+        await db.set(req.session.kullaniciAdi, kullanici)
+    }
     res.redirect('/panel');
 })
 
@@ -215,7 +126,7 @@ app.post('/gonderi/yeni', requireLogin, async (req, res) => {
         id: generatePostId(tumGonderiler.length),
         yazar: kullaniciAdi,
         icerik: icerik,
-        resimUrl: resimUrl && resimUrl.trim() !== '' ? resimUrl.trim() : null,  
+        resimUrl: resimUrl && resimUrl.trim() !== '' ? resimUrl.trim() : null,
         zaman: new Date().toLocaleString('tr-TR'),
         begeniler: [],
         yorumlar: []
@@ -249,7 +160,7 @@ app.get('/gonderi/like/:id', requireLogin, async (req, res) => {
         if (gonderi.yazar !== kullaniciAdi) {
             await bildirimEkle(
                 gonderi.yazar,
-                `${kullaniciAdi}, g�nderinizi begendi!`,
+                `${kullaniciAdi}, gönderinizi beğendi!`,
                 '/panel'
             );
         }
@@ -283,7 +194,7 @@ app.post('/gonderi/yorum/:id', requireLogin, async (req, res) => {
         if (gonderi.yazar !== kullaniciAdi) {
             await bildirimEkle(
                 gonderi.yazar,
-                `${kullaniciAdi}, g�nderinize yorum yapti: "${yorumIcerik.substring(0, 20)}..."`,
+                `${kullaniciAdi}, gönderinize yorum yaptı: "${yorumIcerik.substring(0, 20)}..."`,
                 '/panel'
             );
         }
@@ -293,6 +204,42 @@ app.post('/gonderi/yorum/:id', requireLogin, async (req, res) => {
 });
 
 
+
+app.post('/grup/olustur', requireLogin, async (req, res) => {
+    const { grupAdi, uyeler } = req.body;
+    const kurucu = req.session.kullaniciAdi;
+
+    if (!grupAdi || !uyeler || !Array.isArray(uyeler) || uyeler.length === 0) {
+        return res.redirect('/sohbet?hata=Gecersiz_grup_bilgileri');
+    }
+
+    const yeniGrupId = `grup_${Date.now()}`;
+    const grupUyeleri = [...new Set([kurucu, ...uyeler])];
+
+    const tumGruplar = await db.get('gruplar') || [];
+    const yeniGrup = {
+        id: yeniGrupId,
+        ad: grupAdi,
+        kurucu: kurucu,
+        uyeler: grupUyeleri,
+        olusturmaTarihi: new Date().toLocaleString('tr-TR'),
+        img: 'https://i.ibb.co/2qcWw9w/group-default.png'
+    };
+
+    tumGruplar.push(yeniGrup);
+    await db.set('gruplar', tumGruplar);
+
+    const tumMesajlar = await db.get('mesajlar') || {};
+    tumMesajlar[yeniGrupId] = [{
+        gonderen: 'Sistem',
+        icerik: `"${grupAdi}" grubu oluşturuldu.`,
+        zaman: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
+        sistem: true
+    }];
+    await db.set('mesajlar', tumMesajlar);
+
+    res.redirect(`/sohbet/${yeniGrupId}`);
+});
 
 app.get('/sohbet', requireLogin, async (req, res) => {
     const mevcutKullaniciAdi = req.session.kullaniciAdi;
@@ -305,18 +252,96 @@ app.get('/sohbet', requireLogin, async (req, res) => {
         const detay = await db.get(arkadasAdi);
         return detay ? { ...detay, kullaniciAdi: arkadasAdi } : { kullaniciAdi: arkadasAdi, profilFotografi: 'https://i.ibb.co/L9L1s1K/default-profile.png' };
     });
-    const sohbetEdilebilirKullanicilar = await Promise.all(arkadasDetaylariPromises);
+    const arkadaslar = await Promise.all(arkadasDetaylariPromises);
+
+    const tumMesajlar = await db.get('mesajlar') || {};
+    const tumGruplar = await db.get('gruplar') || [];
+
+    let aktifSohbetler = [];
+
+    for (const roomId of Object.keys(tumMesajlar)) {
+        if (roomId.startsWith('grup_')) continue;
+
+        if (roomId.includes(mevcutKullaniciAdi)) {
+            const parts = roomId.split('_');
+            if (parts.includes(mevcutKullaniciAdi)) {
+                const digerKullaniciAdi = parts.find(u => u !== mevcutKullaniciAdi) || mevcutKullaniciAdi;
+                const digerKullanici = await db.get(digerKullaniciAdi);
+                const mesajlar = tumMesajlar[roomId];
+                const sonMesaj = mesajlar[mesajlar.length - 1];
+
+                aktifSohbetler.push({
+                    id: digerKullaniciAdi,
+                    ad: digerKullaniciAdi,
+                    profil: digerKullanici ? (digerKullanici.profilFotografi || 'https://i.ibb.co/L9L1s1K/default-profile.png') : 'https://i.ibb.co/L9L1s1K/default-profile.png',
+                    status: digerKullanici ? digerKullanici.status : 'offline',
+                    sonMesaj: sonMesaj,
+                    tur: 'dm'
+                });
+            }
+        }
+    }
+
+    const kullaniciGruplari = tumGruplar.filter(g => g.uyeler.includes(mevcutKullaniciAdi));
+    for (const grup of kullaniciGruplari) {
+        const mesajlar = tumMesajlar[grup.id] || [];
+        const sonMesaj = mesajlar.length > 0 ? mesajlar[mesajlar.length - 1] : { icerik: 'Henüz mesaj yok', zaman: '' };
+
+        aktifSohbetler.push({
+            id: grup.id,
+            ad: grup.ad,
+            profil: grup.img,
+            sonMesaj: sonMesaj,
+            tur: 'grup'
+        });
+    }
 
 
     res.render('sohbetler', {
         mevcutKullaniciAdi,
-        arkadaslar: sohbetEdilebilirKullanicilar
+        arkadaslar,
+        aktifSohbetler
     });
 });
 
-app.get('/sohbet/:hedefKullaniciAdi', requireLogin, async (req, res) => {
+app.get('/sohbet/:id', requireLogin, async (req, res) => {
     const mevcutKullaniciAdi = req.session.kullaniciAdi;
-    const hedefKullaniciAdi = req.params.hedefKullaniciAdi;
+    const id = req.params.id;
+
+    if (id.startsWith('grup_')) {
+        const tumGruplar = await db.get('gruplar') || [];
+        const grup = tumGruplar.find(g => g.id === id);
+
+        if (!grup) {
+            return res.status(404).render('hata', { mesaj: `Grup bulunamadı.` });
+        }
+
+        if (!grup.uyeler.includes(mevcutKullaniciAdi)) {
+            return res.status(403).render('hata', { mesaj: `Bu gruba erişim izniniz yok.` });
+        }
+
+        const tumMesajlar = await db.get('mesajlar') || {};
+        const mesajlar = tumMesajlar[id] || [];
+        const roomId = id;
+
+        const grupProfil = grup.img || 'https://i.ibb.co/2qcWw9w/group-default.png';
+        const mevcutKullanici = await db.get(mevcutKullaniciAdi);
+        const mevcutProfil = mevcutKullanici.profilFotografi || 'https://i.ibb.co/L9L1s1K/default-profile.png';
+
+        return res.render('chat', {
+            mevcutKullaniciAdi,
+            hedefKullaniciAdi: grup.ad,
+            hedefProfil: grupProfil,
+            mevcutProfil,
+            mesajlar,
+            roomId,
+            isGroup: true,
+            grupId: id,
+            grupUyeleri: grup.uyeler
+        });
+    }
+
+    const hedefKullaniciAdi = id;
 
     if (mevcutKullaniciAdi === hedefKullaniciAdi) {
         return res.redirect('/sohbet');
@@ -324,14 +349,14 @@ app.get('/sohbet/:hedefKullaniciAdi', requireLogin, async (req, res) => {
 
     const hedefKullanici = await db.get(hedefKullaniciAdi);
     if (!hedefKullanici) {
-        return res.status(404).render('hata', { mesaj: `Kullanici bulunamadi: @${hedefKullaniciAdi}` });
+        return res.status(404).render('hata', { mesaj: `Kullanıcı bulunamadı: @${hedefKullaniciAdi}` });
     }
 
     const mevcutKullanici = await db.get(mevcutKullaniciAdi);
     const arkadasMi = (mevcutKullanici.arkadaslar || []).includes(hedefKullaniciAdi);
 
     if (!arkadasMi) {
-        return res.render('hata', { mesaj: `Sohbet baslatmak i�in @${hedefKullaniciAdi} ile arkadas olmalisiniz.` });
+        return res.render('hata', { mesaj: `Sohbet başlatmak için @${hedefKullaniciAdi} ile arkadaş olmalısınız.` });
     }
 
     const roomId = getChatRoomId(mevcutKullaniciAdi, hedefKullaniciAdi);
@@ -347,7 +372,9 @@ app.get('/sohbet/:hedefKullaniciAdi', requireLogin, async (req, res) => {
         hedefProfil,
         mevcutProfil,
         mesajlar,
-        roomId
+        roomId,
+        isGroup: false,
+        hedefStatus: hedefKullanici.status || 'offline'
     });
 });
 
@@ -469,7 +496,7 @@ app.get('/arkadas_ekle/:hedefKullaniciAdi', requireLogin, async (req, res) => {
 
         await bildirimEkle(
             hedefKullaniciAdi,
-            `${mevcutKullaniciAdi} size arkadaslik istegi g�nderdi.`,
+            `${mevcutKullaniciAdi} size arkadaslik istegi gönderdi.`,
             `/arkadaslarim`
         );
     }
@@ -510,7 +537,7 @@ app.get('/istek_yonet/kabul/:gonderenKullaniciAdi', requireLogin, async (req, re
 
     await bildirimEkle(
         gonderenKullaniciAdi,
-        `${mevcutKullaniciAdi} arkadaslik isteginizi kabul etti! ??`,
+        `${mevcutKullaniciAdi} arkadaslik isteginizi kabul etti! 🎉`,
         `/profil/${mevcutKullaniciAdi}`
     );
 
@@ -679,90 +706,6 @@ app.post('/ayarlar/hesap-sil', requireLogin, async (req, res) => {
     });
 });
 
-
-/*
-var currentToken = "ultrasecrettoken"
-
-app.get("/api", requireLogin, (req, res) => {
-    const token = req.query.token;
-    const key = req.query.key
-    if (token !== currentToken) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
-    if (key) {
-        const database = db.get(key);
-        res.json(database);
-    } else {
-        const database = db.all();
-        res.json(database);
-    }
-})
-*/
-
-io.on('connection', (socket) => {
-    const kullaniciAdi = socket.request.session?.kullaniciAdi;
-
-    if (!kullaniciAdi) {
-        console.log('[Socket] Oturumsuz baglanti reddedildi');
-        socket.disconnect();
-        return;
-    }
-
-    socket.join(kullaniciAdi);
-    console.log(`[Socket] ${kullaniciAdi} baglandi (ID: ${socket.id})`);
-
-    socket.on('join_chat_room', (roomId) => {
-        socket.join(roomId);
-        console.log(`[Socket] ${kullaniciAdi} sohbet odasina katildi: ${roomId}`);
-    });
-
-    socket.on('send_message', async (data) => {
-        try {
-            const { roomId, hedefKullaniciAdi, mesajIcerigi } = data;
-
-            if (!mesajIcerigi || mesajIcerigi.trim() === '') {
-                return;
-            }
-
-            const yeniMesaj = {
-                gonderen: kullaniciAdi,
-                icerik: mesajIcerigi.trim(),
-                zaman: new Date().toLocaleTimeString('tr-TR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-            };
-
-            const tumMesajlar = await db.get('mesajlar') || {};
-            tumMesajlar[roomId] = tumMesajlar[roomId] || [];
-            tumMesajlar[roomId].push(yeniMesaj);
-            await db.set('mesajlar', tumMesajlar);
-
-            socket.broadcast.to(roomId).emit('receive_message', yeniMesaj);
-
-            await bildirimEkle(
-                hedefKullaniciAdi,
-                `${kullaniciAdi} size mesaj g�nderdi: "${mesajIcerigi.substring(0, 30)}..."`,
-                `/sohbet/${kullaniciAdi}`
-            );
-
-            console.log(`[Socket] Mesaj: ${kullaniciAdi} -> ${hedefKullaniciAdi}`);
-
-        } catch (error) {
-            console.error('[Socket] Mesaj hatasi:', error);
-            socket.emit('message_error', { message: 'Mesaj g�nderilemedi' });
-        }
-    });
-
-    socket.on('disconnect', (reason) => {
-        console.log(`[Socket] ${kullaniciAdi} ayrildi (${reason})`);
-    });
-
-    socket.on('error', (error) => {
-        console.error(`[Socket] ${kullaniciAdi} hata:`, error);
-    });
-});
-
 server.listen(port, () => {
-    console.log(`Sunucu http://localhost:${port} adresinde �alisiyor.`);
+    console.log(`Sunucu http://localhost:${port} adresinde calisiyor.`);
 });

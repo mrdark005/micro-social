@@ -1,59 +1,97 @@
 # 🚀 Micro Social
 
-Modern ve kullanıcı dostu bir sosyal medya platformu. Arkadaşlarınızla bağlantıda kalın, düşüncelerinizi paylaşın ve gerçek zamanlı sohbet edin!
+Modern ve kullanıcı dostu bir sosyal medya platformu. Arkadaşlarınızla bağlantıda kalın, düşüncelerinizi paylaşın, topluluklar oluşturun ve gerçek zamanlı sohbet edin!
+
+![Micro Social Banner](https://via.placeholder.com/800x200?text=Micro+Social)
+
+## 📸 Ekran Görüntüleri
+
+### Ana Akış
+![Ana Akış](ss/panel.png)
+
+### Profil Sayfası
+![Profil](ss/profil.png)
+
+### Sohbetler
+![Sohbetler Listesi](ss/sohbetler.png)
+
+### Mesajlaşma
+![Sohbet Ekranı](ss/sohbet.png)
+
+### Arkadaşlar
+![Arkadaş Listesi](ss/arkadaslar.png)
 
 ## ✨ Özellikler
 
--  **Gönderi Paylaşımı** - Düşüncelerinizi paylaşın
-- 💬 **Gerçek Zamanlı Sohbet** - Socket.IO ile anlık mesajlaşma
-- 👥 **Arkadaş Sistemi** - Arkadaş ekleme, istek yönetimi
-- � **Bildirimler** - Anlık bildirim sistemi
-- 👤 **Profil Yönetimi** - Profil ve arka plan fotoğrafı özelleştirme
-- ❤️ **Beğeni & Yorum** - Gönderilere etkileşim
-- 🔍 **Arama & Etiket** - Gönderi arama ve hashtag filtreleme
-- 🎨 **Modern Tasarım** - Gradient renkler ve animasyonlar
+- 📝 **Gönderi Paylaşımı** - Düşüncelerinizi paylaşın, gönderiler oluşturun.
+- 💬 **Gerçek Zamanlı Sohbet** - Socket.IO destekli anlık birebir mesajlaşma.
+- 👥 **Grup Sohbetleri** - Topluluklar kurun, gruplarda sohbet edin.
+- 🤝 **Arkadaş Sistemi** - Arkadaş ekleme, istek gönderme ve kabul etme.
+- 🔔 **Bildirimler** - Mesajlar, beğeniler ve arkadaşlık istekleri için anlık bildirimler.
+- 👤 **Profil Yönetimi** - Profil resmi, kapak fotoğrafı ve biyografi özelleştirme.
+- ❤️ **Etkileşimler** - Gönderileri beğenme ve yorum yapma.
+- 🔍 **Arama & Etiket** - Gelişmiş arama ve hashtag (#etiket) desteği.
+- 🎨 **Modern Arayüz** - Responsive tasarım, gradient renkler ve animasyonlar.
 
 ## 🛠️ Teknolojiler
 
-- **Backend:** Node.js, Express.js
-- **Veritabanı:** DarkDB
-- **Gerçek Zamanlı:** Socket.IO
-- **Template Engine:** EJS
-- **Session:** Express-Session
+- **Backend:** Node.js, Express.js (v5)
+- **Veritabanı:** npm.db (JSON tabanlı)
+- **Real-time:** Socket.IO
+- **Frontend:** EJS, Bootstrap 5, Vanilla CSS
+- **Modüler Yapı:** Ayrıştırılmış Router ve Socket Handler yapısı
 
-## � Kurulum
+## 📂 Proje Yapısı
 
-```bash
-# Bağımlılıkları yükleyin
-npm install
-
-# Uygulamayı başlatın
-node index.js
+```
+micro-social/
+├── routes/             # Express rotaları (Auth, API)
+├── socket/             # Socket.IO olay işleyicileri
+├── utils/              # Yardımcı fonksiyonlar (Helpers)
+├── views/              # EJS şablonları (Sayfalar ve Partial'lar)
+├── public/             # Statik dosyalar (CSS, JS, Resimler)
+├── db.js               # Veritabanı bağlantı modülü
+├── index.js            # Ana sunucu dosyası
+└── database.json       # Veri saklama dosyası
 ```
 
-Uygulama `http://localhost:3000` adresinde çalışacaktır.
+## 🚀 Kurulum
 
-## 📦 Bağımlılıklar
+1.  Projeyi indirin:
+    ```bash
+    git clone https://github.com/kullaniciadi/micro-social.git
+    cd micro-social
+    ```
 
-```json
-{
-  "express": "^5.1.0",
-  "ejs": "^3.1.10",
-  "darkdb": "^3.4.0",
-  "socket.io": "^4.8.1",
-  "express-session": "^1.18.2",
-  "body-parser": "^2.2.1"
-}
-```
+2.  Bağımlılıkları yükleyin:
+    ```bash
+    npm install
+    ```
 
-## 🌐 Demo
+3.  Uygulamayı başlatın:
+    ```bash
+    node index
+    ```
 
-Canlı demo için: [microsocial.vercel.app](https://microsocial.vercel.app)
+4.  Tarayıcıda açın:
+    `http://localhost:3000`
 
-## � Lisans
+## � API Kullanımı
 
-MIT License
+Uygulama dışından verilere erişmek için API uç noktaları mevcuttur.
+
+**Base URL:** `/api`
+
+| Method | Endpoint | Açıklama |
+| :--- | :--- | :--- |
+| `GET` | `/?token=KEY` | Veritabanındaki tüm verileri getirir. |
+| `GET` | `/?token=KEY&key=users` | Belirli bir tabloyu (örn: users) getirir. |
+
+*Güvenlik Notu: API kullanımı için `routes/api.js` içinde tanımlı token gereklidir.*
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
 
 ---
-
-**Made with ❤️ by MrDark**
+**Geliştirici:** MrDark

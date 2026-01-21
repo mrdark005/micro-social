@@ -1,346 +1,327 @@
-<% const { kullanici }=locals; let body=` <style>
-    .settings-container {
-    background: #f8f9fa;
-    min-height: 100vh;
-    padding: 40px 0;
-    }
+<% const { kullanici }=locals; %>
 
-    .settings-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 25px;
-    padding: 40px;
-    margin-bottom: 30px;
-    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.25);
-    color: white;
-    text-align: center;
-    }
+    <%- include('header', Object.assign({}, locals, { title: 'Ayarlar' })) %>
 
-    .settings-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    }
+        <style>
+            .settings-container {
+                background: #f8f9fa;
+                min-height: 100vh;
+                padding: 40px 0;
+            }
 
-    .settings-card {
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-    border: 1px solid #f0f0f0;
-    }
+            .settings-header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 25px;
+                padding: 40px;
+                margin-bottom: 30px;
+                box-shadow: 0 15px 50px rgba(102, 126, 234, 0.25);
+                color: white;
+                text-align: center;
+            }
 
-    .settings-card-header {
-    padding: 25px 30px;
-    font-weight: 700;
-    font-size: 1.3rem;
-    border-bottom: 2px solid #f0f0f0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: #2d3436;
-    }
+            .settings-title {
+                font-size: 2.5rem;
+                font-weight: 800;
+                margin-bottom: 10px;
+            }
 
-    .settings-card-body {
-    padding: 30px;
-    }
+            .settings-card {
+                background: white;
+                border-radius: 20px;
+                overflow: hidden;
+                margin-bottom: 25px;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+                border: 1px solid #f0f0f0;
+            }
 
-    .form-label {
-    font-weight: 600;
-    color: #2d3436;
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-    }
+            .settings-card-header {
+                padding: 25px 30px;
+                font-weight: 700;
+                font-size: 1.3rem;
+                border-bottom: 2px solid #f0f0f0;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                color: #2d3436;
+            }
 
-    .form-control {
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 12px 18px;
-    font-size: 15px;
-    transition: all 0.3s;
-    }
+            .settings-card-body {
+                padding: 30px;
+            }
 
-    .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    outline: none;
-    }
+            .form-label {
+                font-weight: 600;
+                color: #2d3436;
+                margin-bottom: 10px;
+                font-size: 0.95rem;
+            }
 
-    .btn-save {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    color: white;
-    border-radius: 12px;
-    padding: 14px 35px;
-    font-weight: 600;
-    transition: all 0.3s;
-    width: 100%;
-    }
+            .form-control {
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                padding: 12px 18px;
+                font-size: 15px;
+                transition: all 0.3s;
+            }
 
-    .btn-save:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    color: white;
-    }
+            .form-control:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                outline: none;
+            }
 
-    .btn-danger-custom {
-    background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
-    border: none;
-    color: white;
-    border-radius: 12px;
-    padding: 14px 35px;
-    font-weight: 600;
-    transition: all 0.3s;
-    width: 100%;
-    }
+            .btn-save {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                color: white;
+                border-radius: 12px;
+                padding: 14px 35px;
+                font-weight: 600;
+                transition: all 0.3s;
+                width: 100%;
+            }
 
-    .btn-danger-custom:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(214, 48, 49, 0.4);
-    color: white;
-    }
+            .btn-save:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+                color: white;
+            }
 
-    .profile-preview {
-    text-align: center;
-    margin-bottom: 25px;
-    }
+            .btn-danger-custom {
+                background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+                border: none;
+                color: white;
+                border-radius: 12px;
+                padding: 14px 35px;
+                font-weight: 600;
+                transition: all 0.3s;
+                width: 100%;
+            }
 
-    .profile-preview-img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid #667eea;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    margin-bottom: 15px;
-    }
+            .btn-danger-custom:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(214, 48, 49, 0.4);
+                color: white;
+            }
 
-    .cover-preview {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 15px;
-    border: 3px solid #e0e0e0;
-    margin-top: 15px;
-    }
+            .profile-preview {
+                text-align: center;
+                margin-bottom: 25px;
+            }
 
-    .info-text {
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 8px;
-    font-style: italic;
-    }
+            .profile-preview-img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 5px solid #667eea;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                margin-bottom: 15px;
+            }
 
-    .alert-success-custom {
-    background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
-    color: white;
-    border-radius: 12px;
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    }
+            .cover-preview {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                border-radius: 15px;
+                border: 3px solid #e0e0e0;
+                margin-top: 15px;
+            }
 
-    .alert-danger-custom {
-    background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
-    color: white;
-    border-radius: 12px;
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    }
+            .info-text {
+                color: #666;
+                font-size: 0.9rem;
+                margin-top: 8px;
+                font-style: italic;
+            }
 
-    .danger-zone {
-    background: #fff5f5;
-    border: 2px solid #ff7675;
-    border-radius: 15px;
-    padding: 25px;
-    margin-top: 20px;
-    }
+            .danger-zone {
+                background: #fff5f5;
+                border: 2px solid #ff7675;
+                border-radius: 15px;
+                padding: 25px;
+                margin-top: 20px;
+            }
 
-    .danger-zone-title {
-    color: #d63031;
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    }
+            .danger-zone-title {
+                color: #d63031;
+                font-weight: 700;
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
 
-    .username-display {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 12px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 20px;
-    }
-    </style>
+            .username-display {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 12px;
+                font-size: 1.2rem;
+                font-weight: 600;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+        </style>
 
-    <div class="settings-container">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
+        <div class="settings-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
 
-                    <div class="settings-header">
-                        <h1 class="settings-title">⚙️ Ayarlar</h1>
-                        <p style="opacity: 0.9; font-size: 1.1rem; margin: 0;">Hesap ayarlarınızı yönetin</p>
-                    </div>
-
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            👤 Profil Bilgileri
+                        <div class="settings-header">
+                            <h1 class="settings-title">⚙️ Ayarlar</h1>
+                            <p style="opacity: 0.9; font-size: 1.1rem; margin: 0;">Hesap ayarlarınızı yönetin</p>
                         </div>
-                        <div class="settings-card-body">
-                            <div class="username-display">
-                                @${kullanici.kullaniciAdi}
+
+                        <div class="settings-card">
+                            <div class="settings-card-header">
+                                👤 Profil Bilgileri
                             </div>
-
-                            <form action="/ayarlar/profil" method="POST">
-                                <div class="profile-preview">
-                                    <img src="${kullanici.profilFotografi || 'https://i.ibb.co/L9L1s1K/default-profile.png'}"
-                                        class="profile-preview-img" id="profilOnizleme" alt="Profil Fotoğrafı">
+                            <div class="settings-card-body">
+                                <div class="username-display">
+                                    @<%= kullanici.kullaniciAdi %>
                                 </div>
 
-                                <div class="mb-4">
-                                    <label class="form-label">📷 Profil Fotoğrafı URL</label>
-                                    <input type="url" class="form-control" name="profilFotografi" id="profilFotoInput"
-                                        value="${kullanici.profilFotografi || ''}"
-                                        placeholder="https://ornek.com/profil.jpg">
-                                    <div class="info-text">Profil fotoğrafınızın URL adresini girin</div>
-                                </div>
+                                <form action="/ayarlar/profil" method="POST">
+                                    <div class="profile-preview">
+                                        <img src="<%= kullanici.profilFotografi || 'https://i.ibb.co/L9L1s1K/default-profile.png' %>"
+                                            class="profile-preview-img" id="profilOnizleme" alt="Profil Fotoğrafı">
+                                    </div>
 
-                                <div class="mb-4">
-                                    <label class="form-label">🖼️ Arka Plan Fotoğrafı URL</label>
-                                    <input type="url" class="form-control" name="arkaPlanFotografi" id="arkaPlanInput"
-                                        value="${kullanici.arkaPlanFotografi || ''}"
-                                        placeholder="https://ornek.com/arkaplan.jpg">
-                                    <div class="info-text">Profil arka plan fotoğrafınızın URL adresini girin</div>
-                                    <img src="${kullanici.arkaPlanFotografi || 'https://i.ibb.co/VMyhV1J/default-cover.png'}"
-                                        class="cover-preview" id="arkaPlanOnizleme" alt="Arka Plan">
-                                </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">📷 Profil Fotoğrafı URL</label>
+                                        <input type="url" class="form-control" name="profilFotografi"
+                                            id="profilFotoInput" value="<%= kullanici.profilFotografi || '' %>"
+                                            placeholder="https://ornek.com/profil.jpg">
+                                        <div class="info-text">Profil fotoğrafınızın URL adresini girin</div>
+                                    </div>
 
-                                <button type="submit" class="btn btn-save">
-                                    💾 Profil Bilgilerini Kaydet
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">🖼️ Arka Plan Fotoğrafı URL</label>
+                                        <input type="url" class="form-control" name="arkaPlanFotografi"
+                                            id="arkaPlanInput" value="<%= kullanici.arkaPlanFotografi || '' %>"
+                                            placeholder="https://ornek.com/arkaplan.jpg">
+                                        <div class="info-text">Profil arka plan fotoğrafınızın URL adresini girin</div>
+                                        <img src="<%= kullanici.arkaPlanFotografi || 'https://i.ibb.co/VMyhV1J/default-cover.png' %>"
+                                            class="cover-preview" id="arkaPlanOnizleme" alt="Arka Plan">
+                                    </div>
 
-                    <div class="settings-card">
-                        <div class="settings-card-header">
-                            🔒 Şifre Değiştir
-                        </div>
-                        <div class="settings-card-body">
-                            <form action="/ayarlar/sifre" method="POST">
-                                <div class="mb-4">
-                                    <label class="form-label">Mevcut Şifre</label>
-                                    <input type="password" class="form-control" name="mevcutSifre"
-                                        placeholder="Mevcut şifrenizi girin" required>
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label">Yeni Şifre</label>
-                                    <input type="password" class="form-control" name="yeniSifre" id="yeniSifre"
-                                        placeholder="Yeni şifrenizi girin" minlength="4" required>
-                                    <div class="info-text">Şifreniz en az 4 karakter olmalıdır</div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label">Yeni Şifre (Tekrar)</label>
-                                    <input type="password" class="form-control" name="yeniSifreTekrar"
-                                        id="yeniSifreTekrar" placeholder="Yeni şifrenizi tekrar girin" required>
-                                </div>
-
-                                <button type="submit" class="btn btn-save">
-                                    🔐 Şifreyi Değiştir
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="settings-card">
-                        <div class="settings-card-header"
-                            style="background: linear-gradient(135deg, #ff7675 0%, #d63031 100%); color: white;">
-                            ⚠️ Tehlikeli Bölge
-                        </div>
-                        <div class="settings-card-body">
-                            <div class="danger-zone">
-                                <div class="danger-zone-title">
-                                    🗑️ Hesabı Sil
-                                </div>
-                                <p style="color: #666; margin-bottom: 20px;">
-                                    Hesabınızı silmek geri alınamaz bir işlemdir. Tüm verileriniz kalıcı olarak
-                                    silinecektir.
-                                </p>
-                                <form action="/ayarlar/hesap-sil" method="POST"
-                                    onsubmit="return confirm('Hesabınızı silmek istediğinizden EMİN MİSİNİZ? Bu işlem geri alınamaz!');">
-                                    <button type="submit" class="btn btn-danger-custom">
-                                        ⚠️ Hesabımı Kalıcı Olarak Sil
+                                    <button type="submit" class="btn btn-save">
+                                        💾 Profil Bilgilerini Kaydet
                                     </button>
                                 </form>
                             </div>
                         </div>
-                    </div>
 
+                        <div class="settings-card">
+                            <div class="settings-card-header">
+                                🔒 Şifre Değiştir
+                            </div>
+                            <div class="settings-card-body">
+                                <form action="/ayarlar/sifre" method="POST">
+                                    <div class="mb-4">
+                                        <label class="form-label">Mevcut Şifre</label>
+                                        <input type="password" class="form-control" name="mevcutSifre"
+                                            placeholder="Mevcut şifrenizi girin" required>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Yeni Şifre</label>
+                                        <input type="password" class="form-control" name="yeniSifre" id="yeniSifre"
+                                            placeholder="Yeni şifrenizi girin" minlength="4" required>
+                                        <div class="info-text">Şifreniz en az 4 karakter olmalıdır</div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Yeni Şifre (Tekrar)</label>
+                                        <input type="password" class="form-control" name="yeniSifreTekrar"
+                                            id="yeniSifreTekrar" placeholder="Yeni şifrenizi tekrar girin" required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-save">
+                                        🔐 Şifreyi Değiştir
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-header"
+                                style="background: linear-gradient(135deg, #ff7675 0%, #d63031 100%); color: white;">
+                                ⚠️ Tehlikeli Bölge
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="danger-zone">
+                                    <div class="danger-zone-title">
+                                        🗑️ Hesabı Sil
+                                    </div>
+                                    <p style="color: #666; margin-bottom: 20px;">
+                                        Hesabınızı silmek geri alınamaz bir işlemdir. Tüm verileriniz kalıcı olarak
+                                        silinecektir.
+                                    </p>
+                                    <form action="/ayarlar/hesap-sil" method="POST"
+                                        onsubmit="return confirm('Hesabınızı silmek istediğinizden EMİN MİSİNİZ? Bu işlem geri alınamaz!');">
+                                        <button type="submit" class="btn btn-danger-custom">
+                                            ⚠️ Hesabımı Kalıcı Olarak Sil
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        // Profil fotoğrafı önizleme
-        const profilFotoInput = document.getElementById('profilFotoInput');
-        const profilOnizleme = document.getElementById('profilOnizleme');
+        <script>
+            const profilFotoInput = document.getElementById('profilFotoInput');
+            const profilOnizleme = document.getElementById('profilOnizleme');
 
-        profilFotoInput.addEventListener('input', function () {
-            const url = this.value.trim();
-            if (url) {
-                profilOnizleme.src = url;
-                profilOnizleme.onerror = function () {
-                    this.src = 'https://i.ibb.co/L9L1s1K/default-profile.png';
-                };
-            }
-        });
+            profilFotoInput.addEventListener('input', function () {
+                const url = this.value.trim();
+                if (url) {
+                    profilOnizleme.src = url;
+                    profilOnizleme.onerror = function () {
+                        this.src = 'https://i.ibb.co/L9L1s1K/default-profile.png';
+                    };
+                }
+            });
 
-        // Arka plan fotoğrafı önizleme
-        const arkaPlanInput = document.getElementById('arkaPlanInput');
-        const arkaPlanOnizleme = document.getElementById('arkaPlanOnizleme');
+            const arkaPlanInput = document.getElementById('arkaPlanInput');
+            const arkaPlanOnizleme = document.getElementById('arkaPlanOnizleme');
 
-        arkaPlanInput.addEventListener('input', function () {
-            const url = this.value.trim();
-            if (url) {
-                arkaPlanOnizleme.src = url;
-                arkaPlanOnizleme.onerror = function () {
-                    this.src = 'https://i.ibb.co/VMyhV1J/default-cover.png';
-                };
-            }
-        });
+            arkaPlanInput.addEventListener('input', function () {
+                const url = this.value.trim();
+                if (url) {
+                    arkaPlanOnizleme.src = url;
+                    arkaPlanOnizleme.onerror = function () {
+                        this.src = 'https://i.ibb.co/VMyhV1J/default-cover.png';
+                    };
+                }
+            });
 
-        // Şifre eşleşme kontrolü
-        const yeniSifre = document.getElementById('yeniSifre');
-        const yeniSifreTekrar = document.getElementById('yeniSifreTekrar');
+            const yeniSifre = document.getElementById('yeniSifre');
+            const yeniSifreTekrar = document.getElementById('yeniSifreTekrar');
 
-        yeniSifreTekrar.addEventListener('input', function () {
-            if (this.value !== yeniSifre.value) {
-                this.setCustomValidity('Şifreler eşleşmiyor!');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
+            yeniSifreTekrar.addEventListener('input', function () {
+                if (this.value !== yeniSifre.value) {
+                    this.setCustomValidity('Şifreler eşleşmiyor!');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
 
-        yeniSifre.addEventListener('input', function () {
-            if (yeniSifreTekrar.value && yeniSifreTekrar.value !== this.value) {
-                yeniSifreTekrar.setCustomValidity('Şifreler eşleşmiyor!');
-            } else {
-                yeniSifreTekrar.setCustomValidity('');
-            }
-        });
-    </script>
-    `;
-    %>
+            yeniSifre.addEventListener('input', function () {
+                if (yeniSifreTekrar.value && yeniSifreTekrar.value !== this.value) {
+                    yeniSifreTekrar.setCustomValidity('Şifreler eşleşmiyor!');
+                } else {
+                    yeniSifreTekrar.setCustomValidity('');
+                }
+            });
+        </script>
 
-    <%- include('layout', { title: 'Ayarlar' , body: body }) %>
+        <%- include('footer') %>

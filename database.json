@@ -1,0 +1,241 @@
+{
+    "mrdark": {
+        "kullaniciAdi": "mrdark",
+        "sifre": "1234",
+        "olusturmaTarihi": "2026-01-13T17:18:20.111Z",
+        "bildirimler": [
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark3: \"naber...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": false,
+                "zaman": "22.01.2026 00:57:07"
+            },
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark2: \"as...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": false,
+                "zaman": "22.01.2026 00:56:46"
+            },
+            {
+                "mesaj": "mrdark2 size mesaj g�nderdi: \"naber bro...\"",
+                "link": "/sohbet/mrdark2",
+                "okundu": false,
+                "zaman": "21.01.2026 21:26:35"
+            },
+            {
+                "mesaj": "mrdark2 arkadaslik isteginizi kabul etti! ??",
+                "link": "/profil/mrdark2",
+                "okundu": false,
+                "zaman": "21.01.2026 21:14:52"
+            }
+        ],
+        "arkadaslar": [
+            "mrdark2",
+            "mrdark3"
+        ],
+        "arkadasIstekleri": [],
+        "profilFotografi": "cdn/defultUserProfil.png",
+        "arkaPlanFotografi": " ",
+        "status": "online"
+    },
+    "mrdark2": {
+        "kullaniciAdi": "mrdark2",
+        "sifre": "1234",
+        "olusturmaTarihi": "2026-01-13T17:18:20.111Z",
+        "bildirimler": [
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark: \"a...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": false,
+                "zaman": "22.01.2026 01:19:26"
+            },
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark: \"naber reis...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": false,
+                "zaman": "22.01.2026 01:15:29"
+            },
+            {
+                "mesaj": "mrdark size mesaj gnderdi: \"sa aga...\"",
+                "link": "/sohbet/mrdark",
+                "okundu": false,
+                "zaman": "22.01.2026 01:15:16"
+            },
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark3: \"naber...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": false,
+                "zaman": "22.01.2026 00:57:07"
+            },
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark: \"sa...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": true,
+                "zaman": "22.01.2026 00:56:30"
+            },
+            {
+                "mesaj": "mrdark size mesaj g�nderdi: \"naber...\"",
+                "link": "/sohbet/mrdark",
+                "okundu": true,
+                "zaman": "21.01.2026 21:23:06"
+            },
+            {
+                "mesaj": "mrdark size mesaj g�nderdi: \"sa...\"",
+                "link": "/sohbet/mrdark",
+                "okundu": true,
+                "zaman": "21.01.2026 21:23:03"
+            },
+            {
+                "mesaj": "mrdark size arkadaslik istegi g�nderdi.",
+                "link": "/arkadaslarim",
+                "okundu": true,
+                "zaman": "21.01.2026 21:14:42"
+            }
+        ],
+        "arkadaslar": [
+            "mrdark"
+        ],
+        "arkadasIstekleri": [],
+        "profilFotografi": "cdn/defultUserProfil.png",
+        "arkaPlanFotografi": " ",
+        "status": "offline"
+    },
+    "mrdark3": {
+        "kullaniciAdi": "mrdark3",
+        "sifre": "1234",
+        "olusturmaTarihi": "2026-01-13T17:18:20.111Z",
+        "bildirimler": [
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark: \"a...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": false,
+                "zaman": "22.01.2026 01:19:26"
+            },
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark: \"naber reis...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": false,
+                "zaman": "22.01.2026 01:15:29"
+            },
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark2: \"as...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": true,
+                "zaman": "22.01.2026 00:56:46"
+            },
+            {
+                "mesaj": "\"hafta sonu\" grubunda mrdark: \"sa...\"",
+                "link": "/sohbet/grup_1769023570522",
+                "okundu": true,
+                "zaman": "22.01.2026 00:56:30"
+            },
+            {
+                "mesaj": "mrdark size mesaj g�nderdi: \"naber...\"",
+                "link": "/sohbet/mrdark",
+                "okundu": true,
+                "zaman": "21.01.2026 21:23:06"
+            },
+            {
+                "mesaj": "mrdark size mesaj g�nderdi: \"sa...\"",
+                "link": "/sohbet/mrdark",
+                "okundu": true,
+                "zaman": "21.01.2026 21:23:03"
+            },
+            {
+                "mesaj": "mrdark size arkadaslik istegi g�nderdi.",
+                "link": "/arkadaslarim",
+                "okundu": true,
+                "zaman": "21.01.2026 21:14:42"
+            }
+        ],
+        "arkadaslar": [
+            "mrdark"
+        ],
+        "arkadasIstekleri": [],
+        "profilFotografi": "cdn/defultUserProfil.png",
+        "arkaPlanFotografi": " ",
+        "status": "online"
+    },
+    "posts": [
+        {
+            "id": "post_1768324706088_0",
+            "yazar": "mrdark",
+            "icerik": "sa",
+            "resimUrl": null,
+            "zaman": "13.01.2026 22:18:26",
+            "begeniler": [],
+            "yorumlar": []
+        }
+    ],
+    "mesajlar": {
+        "mrdark_mrdark2": [
+            {
+                "gonderen": "mrdark",
+                "icerik": "sa",
+                "zaman": "21:23"
+            },
+            {
+                "gonderen": "mrdark",
+                "icerik": "naber",
+                "zaman": "21:23"
+            },
+            {
+                "gonderen": "mrdark2",
+                "icerik": "naber bro",
+                "zaman": "21:26"
+            },
+            {
+                "gonderen": "mrdark",
+                "icerik": "sa aga",
+                "zaman": "01:15"
+            }
+        ],
+        "grup_1769023570522": [
+            {
+                "gonderen": "Sistem",
+                "icerik": "\"hafta sonu\" grubu oluşturuldu.",
+                "zaman": "00:26",
+                "sistem": true
+            },
+            {
+                "gonderen": "mrdark",
+                "icerik": "sa",
+                "zaman": "00:56"
+            },
+            {
+                "gonderen": "mrdark2",
+                "icerik": "as",
+                "zaman": "00:56"
+            },
+            {
+                "gonderen": "mrdark3",
+                "icerik": "naber",
+                "zaman": "00:57"
+            },
+            {
+                "gonderen": "mrdark",
+                "icerik": "naber reis",
+                "zaman": "01:15"
+            },
+            {
+                "gonderen": "mrdark",
+                "icerik": "a",
+                "zaman": "01:19"
+            }
+        ]
+    },
+    "gruplar": [
+        {
+            "id": "grup_1769023570522",
+            "ad": "hafta sonu",
+            "kurucu": "mrdark",
+            "uyeler": [
+                "mrdark",
+                "mrdark2",
+                "mrdark3"
+            ],
+            "olusturmaTarihi": "22.01.2026 00:26:10",
+            "img": "https://i.ibb.co/2qcWw9w/group-default.png"
+        }
+    ]
+}

@@ -1,26 +1,44 @@
-<% var title='Giriş Yap' ; %>
-    <% var body=` <div class="card shadow-lg">
-        <div class="card-body">
-            <h3 class="card-title text-center mb-4">Giriş Yap</h3>
+<% const { hata, basari }=locals; %>
 
-            ${hata ? `<div class="alert alert-danger" role="alert">${hata}</div>` : ''}
-            ${basari ? `<div class="alert alert-success" role="alert">${basari}</div>` : ''}
+    <%- include('header', Object.assign({}, locals, { title: 'Giriş Yap' })) %>
 
-            <form action="/giris" method="POST">
-                <div class="mb-3">
-                    <label for="kullaniciAdi" class="form-label">Kullanıcı Adı:</label>
-                    <input type="text" id="kullaniciAdi" name="kullaniciAdi" class="form-control" required>
+        <div class="row pt-5">
+            <div class="col-md-6 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Giriş Yap</h3>
+
+                        <% if (hata) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= hata %>
+                            </div>
+                            <% } %>
+
+                                <% if (basari) { %>
+                                    <div class="alert alert-success" role="alert">
+                                        <%= basari %>
+                                    </div>
+                                    <% } %>
+
+                                        <form action="/giris" method="POST">
+                                            <div class="mb-3">
+                                                <label for="kullaniciAdi" class="form-label">Kullanıcı Adı:</label>
+                                                <input type="text" id="kullaniciAdi" name="kullaniciAdi"
+                                                    class="form-control" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="sifre" class="form-label">Şifre:</label>
+                                                <input type="password" id="sifre" name="sifre" class="form-control"
+                                                    required>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success w-100 mt-3">Giriş Yap</button>
+                                        </form>
+                                        <p class="text-center mt-3">Hesabın yok mu? <a href="/kayit">Kayıt Ol</a></p>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="sifre" class="form-label">Şifre:</label>
-                    <input type="password" id="sifre" name="sifre" class="form-control" required>
-                </div>
-
-                <button type="submit" class="btn btn-success w-100 mt-3">Giriş Yap</button>
-            </form>
-            <p class="text-center mt-3">Hesabın yok mu? <a href="/kayit">Kayıt Ol</a></p>
+            </div>
         </div>
-        </div>
-        `; %>
-        <%- include('layout', { title: title, body: body }) %>
+
+        <%- include('footer') %>
