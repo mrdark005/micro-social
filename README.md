@@ -38,8 +38,6 @@ Modern ve kullanıcı dostu bir sosyal medya platformu. Arkadaşlarınızla bağ
 - **Backend:** Node.js, Express.js (v5)
 - **Veritabanı:** npm.db (JSON tabanlı)
 - **Real-time:** Socket.IO
-- **Frontend:** EJS, Bootstrap 5, Vanilla CSS
-- **Modüler Yapı:** Ayrıştırılmış Router ve Socket Handler yapısı
 
 ## 📂 Proje Yapısı
 
@@ -63,7 +61,7 @@ micro-social/
     cd micro-social
     ```
 
-2.  Bağımlılıkları yükleyin:
+2.  Paketleri yükleyin:
     ```bash
     npm install
     ```
@@ -75,19 +73,6 @@ micro-social/
 
 4.  Tarayıcıda açın:
     `http://localhost:3000`
-
-## � API Kullanımı
-
-Uygulama dışından verilere erişmek için API uç noktaları mevcuttur.
-
-**Base URL:** `/api`
-
-| Method | Endpoint | Açıklama |
-| :--- | :--- | :--- |
-| `GET` | `/?token=KEY` | Veritabanındaki tüm verileri getirir. |
-| `GET` | `/?token=KEY&key=users` | Belirli bir tabloyu (örn: users) getirir. |
-
-*Güvenlik Notu: API kullanımı için `routes/api.js` içinde tanımlı token gereklidir.*
 
 ## 📄 Lisans
 
