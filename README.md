@@ -2,8 +2,6 @@
 
 Modern ve kullanıcı dostu bir sosyal medya platformu. Arkadaşlarınızla bağlantıda kalın, düşüncelerinizi paylaşın, topluluklar oluşturun ve gerçek zamanlı sohbet edin!
 
-![Micro Social Banner](https://via.placeholder.com/800x200?text=Micro+Social)
-
 ## 📸 Ekran Görüntüleri
 
 ### Ana Akış
